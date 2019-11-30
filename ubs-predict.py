@@ -91,20 +91,22 @@ rms
 train = new_data[:987]
 valid = new_data[987:]
 valid['Predictions'] = closing_price
-# plt.plot(train['Close'])
+plt.plot(train['Close'])
 plt.plot(valid[['Close','Predictions']])
 
 
 ####################################
 # predict next day data
 
-inputs = new_data[len(new_data) - len(valid) - 60:].values
-inputs = inputs.reshape(-1,1)
-inputs  = scaler.transform(inputs) # scale between 0 / 1 
+next_year = pd.DataFrame(index=range(0,len(df+365)),columns=['Date', 'Close'])
+
+inputs_next_year = new_data[len(next_year) - len(valid) - 60:].values
+inputs_next_year = inputs_next_year.reshape(-1,1)
+inputs_next_year  = scaler.transform(inputs_next_year) # scale between 0 / 1 
 
 X_test = []
-for i in range(60,inputs.shape[0]):
-    X_test.append(inputs[i-60:i,0])
+for i in range(60,inputs_next_year.shape[0]):
+    X_test.append(inputs_next_year[i-60:i,0])
 X_test = np.array(X_test) # natrix of 248,60
 
 X_test = np.reshape(X_test, (X_test.shape[0],X_test.shape[1],1))  # transform in cube of 248,60,1
